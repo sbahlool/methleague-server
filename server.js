@@ -16,9 +16,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 app.use(express.static(path.join(__dirname, '../meth_league-client/dist')))
 
 app.get('*', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, '../meth_league-client/build', 'index.html')
-  )
+  res.sendFile(path.join(__dirname, '../meth_league-client/dist', 'index.html'))
 })
 
 const AuthRouter = require('./routes/AuthRouter')
