@@ -1,15 +1,13 @@
 const multer = require('multer')
 const path = require('path')
 
-// Set storage engine
 const storage = multer.diskStorage({
-  destination: path.join(__dirname, '../../meth_league-client/public/uploads'), // Corrected path
+  destination: path.join(__dirname, '../../meth_league-client/public/uploads'),
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}${path.extname(file.originalname)}`)
   }
 })
 
-// Check file type
 const checkFileType = (file, cb) => {
   const filetypes = /jpeg|jpg|png|gif/
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase())

@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const controller = require('../controllers/AuthCtrl')
 const middleware = require('../middleware')
-const upload = require('../middleware/upload')
+// const upload = require('../middleware/upload')
 
 router.post('/login', controller.Login)
 router.post('/register', controller.Register)
@@ -10,7 +10,6 @@ router.put(
   '/editProfile/:username',
   middleware.stripToken,
   middleware.verifyToken,
-  upload.single('profilePicture'), // Add multer middleware
   controller.EditProfile
 )
 router.put(
