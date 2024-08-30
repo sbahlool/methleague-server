@@ -24,12 +24,14 @@ const TeamRouter = require('./routes/TeamRouter')
 const MatchRouter = require('./routes/MatchRouter')
 const PredictionRouter = require('./routes/PredictionRouter')
 const ApiRouter = require('./routes/ApiRouter')
+const PasswordResetRouter = require('./routes/PasswordResetRouter')
 
 app.use('/auth', AuthRouter) // Auth routes
 app.use('/teams', TeamRouter) // Team routes
 app.use('/match', MatchRouter) // Match routes
 app.use('/predictions', PredictionRouter) // Prediction routes
 app.use('/api', ApiRouter)
+app.use('/password-reset', PasswordResetRouter)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
