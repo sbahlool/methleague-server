@@ -15,8 +15,10 @@ app.use(
     allowedHeaders: ['Content-Type', 'Authorization']
   })
 )
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
 // app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 // app.use(express.static(path.join(__dirname, '../meth_league-client/dist')))
