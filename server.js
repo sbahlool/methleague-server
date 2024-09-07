@@ -10,7 +10,17 @@ const app = express()
 
 app.use(
   cors({
-    origin: 'http://methleague.surge.sh',
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        'http://methleague.surge.sh',
+        'http://localhost:5173'
+      ]
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
   })
