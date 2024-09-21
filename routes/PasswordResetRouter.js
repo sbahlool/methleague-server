@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const crypto = require('crypto')
-const nodemailer = require('nodemailer')
+const sendEmail = require('../utils/sendEmail')
 const { User } = require('../models')
 
 // Request password reset
@@ -21,13 +21,17 @@ router.post('/forgot', async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000 // 1 hour
     await user.save()
 
-    const transporter = nodemailer.createTransport({
+    const transporter = sendEmail.createTransport({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
       }
     })
+
+    console.log('Email user:', process.env.EMAIL_USER) // Log the email user for debugging
+
+    console.log('Environment Variables:', process.env) // Log all environment variables
 
     const mailOptions = {
       to: user.email,
