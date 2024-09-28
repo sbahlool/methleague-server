@@ -15,7 +15,11 @@ app.use(
         'http://methleague.surge.sh',
         'http://localhost:5173'
       ]
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      if (
+        !origin ||
+        allowedOrigins.indexOf(origin) !== -1 ||
+        process.env.NODE_ENV === 'development'
+      ) {
         callback(null, true)
       } else {
         callback(new Error('Not allowed by CORS'))
