@@ -10,6 +10,15 @@ const recordScore = async (userId, newScore) => {
   }
 }
 
+const getHighScore = async (userId) => {
+  const user = await User.findById(userId)
+  if (!user) {
+    throw new Error('User not found')
+  }
+  return user.highScore
+}
+
 module.exports = {
-  recordScore
+  recordScore,
+  getHighScore // Export the new function
 }
