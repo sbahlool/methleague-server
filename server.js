@@ -33,8 +33,6 @@ app.use(
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
-
 const AuthRouter = require('./routes/AuthRouter')
 const TeamRouter = require('./routes/TeamRouter')
 const MatchRouter = require('./routes/MatchRouter')
