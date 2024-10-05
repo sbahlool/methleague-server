@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const controller = require('../controllers/MiniGameMatchCtrl')
+const User = require('../models/User')
 
 // Route to record a game score
 router.post('/score', async (req, res) => {
