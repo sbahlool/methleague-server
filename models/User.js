@@ -10,6 +10,7 @@ const userSchema = new Schema(
     lastname: { type: String, required: true },
     profilePicture: { type: String },
     team: { type: Schema.Types.ObjectId, ref: 'Team' },
+    MatchHighScore: { type: Number, default: 0 },
     role: {
       type: String,
       enum: ['user', 'admin'],

@@ -41,6 +41,7 @@ const MatchRouter = require('./routes/MatchRouter')
 const PredictionRouter = require('./routes/PredictionRouter')
 const ApiRouter = require('./routes/ApiRouter')
 const PasswordResetRouter = require('./routes/PasswordResetRouter')
+const MiniGameMatchRouter = require('./routes/MiniGameMatchRouter')
 
 app.use('/auth', AuthRouter) // Auth routes
 app.use('/teams', TeamRouter) // Team routes
@@ -48,6 +49,7 @@ app.use('/match', MatchRouter) // Match routes
 app.use('/predictions', PredictionRouter) // Prediction routes
 app.use('/api', ApiRouter)
 app.use('/password-reset', PasswordResetRouter)
+app.use('/minigame', MiniGameMatchRouter)
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`)
