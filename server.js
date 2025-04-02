@@ -4,7 +4,7 @@ require('dotenv').config()
 const path = require('path')
 
 const db = require('./db')
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 4000 || 3000
 
 const app = express()
 
