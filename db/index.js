@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 // Load dotenv module
 require('dotenv').config()
 
-// mongoose Connection
+// mongoose Connectio
 mongoose
   // Port configurations
   .connect(process.env.MONGODB_URL_NEW)
