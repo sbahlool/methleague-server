@@ -6,7 +6,7 @@ require('dotenv').config()
 // mongoose Connection
 mongoose
   // Port configurations
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URL_NEW)
   .then(() => {
     // Connection message
     console.log('Connected to MongoDB')
