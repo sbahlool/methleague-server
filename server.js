@@ -3,6 +3,11 @@ const cors = require('cors')
 require('dotenv').config()
 const path = require('path')
 
+const buffer = require('buffer')
+if (!buffer.SlowBuffer) {
+  buffer.SlowBuffer = buffer.Buffer
+}
+
 const db = require('./db')
 const PORT = process.env.PORT || 4000 || 3000
 
