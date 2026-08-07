@@ -21,19 +21,23 @@ const Register = async (req, res) => {
     } else if (existingUsername) {
       return res.status(400).send('Username is already taken!')
     } else {
-      const user = await User.create({
+      const userData = {
         username,
         email,
         passwordDigest,
         firstname,
         lastname,
-        profilePicture,
-        team // Add team to the user creation
-      })
-      res.send(user)
+        profilePicture
+      }
+      // only include team if it's a non-empty value
+      if (team && team !== '') userData.team = team
+
+      const user = await User.create(userData)
+      res.status(201).send(user)
     }
   } catch (error) {
-    throw error
+    console.error('Error registering user:', error)
+    res.status(500).send({ error: 'Server error during registration' })
   }
 }
 
