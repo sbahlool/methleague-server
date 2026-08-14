@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt') // or whatever hashing library you use
 
 async function generateHash() {
-  const password = 'Hanin@123' // Change this to your desired password
+  const password = 'max@123' // Change this to your desired password
   const saltRounds = 10 // Adjust based on your middleware settings
 
   try {

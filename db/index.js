@@ -3,16 +3,22 @@ const mongoose = require('mongoose')
 // Load dotenv module
 require('dotenv').config()
 
-// mongoose Connectio
+// Prefer explicit connection env vars; fall back to other common names
+const mongoUri =
+  process.env.MONGODB_URL_NEW || process.env.MONGODB_URI || process.env.MONGODB_URIL
+
+if (!mongoUri) {
+  console.error(
+    'Missing MongoDB connection string. Set MONGODB_URL_NEW or MONGODB_URI in environment.'
+  )
+}
+
 mongoose
-  // Port configurations
-  .connect(process.env.MONGODB_URL_NEW)
+  .connect(mongoUri)
   .then(() => {
-    // Connection message
     console.log('Connected to MongoDB')
   })
   .catch((e) => {
-    // cannot connect message
     console.error('Cannot connect to MongoDB', e.message)
   })
 

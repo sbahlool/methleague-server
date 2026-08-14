@@ -1,7 +1,8 @@
 const router = require('express').Router()
 const controller = require('../controllers/AuthCtrl')
 const middleware = require('../middleware')
-// const upload = require('../middleware/upload')
+const upload = require('../middleware/upload')
+const multer = require('multer')
 
 router.post('/login', controller.Login)
 router.post('/register', controller.Register)
@@ -10,6 +11,17 @@ router.put(
   '/editProfile/:username',
   middleware.stripToken,
   middleware.verifyToken,
+  (req, res, next) => {
+    upload.single('profilePicture')(req, res, (err) => {
+      if (err instanceof multer.MulterError) {
+        return res.status(400).json({ error: `Upload failed: ${err.message}` })
+      } else if (err) {
+        // e.g. the fileFilter rejection in middleware/upload.js
+        return res.status(400).json({ error: err.message })
+      }
+      next()
+    })
+  },
   controller.EditProfile
 )
 router.put(

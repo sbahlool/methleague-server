@@ -2,8 +2,6 @@ const { User, Team, Prediction } = require('../models')
 const middleware = require('../middleware')
 const path = require('path')
 const fs = require('fs')
-// const upload = require('../middleware/upload')
-const multer = require('multer')
 
 const Register = async (req, res) => {
   try {
@@ -127,22 +125,25 @@ const EditProfile = async (req, res) => {
       return res.status(404).json({ error: 'User not found' })
     }
 
-    // if (req.file && req.file.filename) {
-    //   const profilePicture = req.file.filename
+    if (req.file && req.file.filename) {
+      const profilePicture = req.file.filename
 
-    //   if (user.profilePicture && user.profilePicture !== 'default.png') {
-    //     const oldPath = path.join(
-    //       __dirname,
-    //       '../../meth_league-client/public/uploads',
-    //       user.profilePicture
-    //     )
-    //     fs.unlink(oldPath, (err) => {
-    //       if (err) console.error('Failed to delete old profile picture:', err)
-    //     })
-    //   }
+      if (user.profilePicture && user.profilePicture !== 'default.png') {
+        const oldPath = path.join(
+          __dirname,
+          '../../meth_league-client/public/uploads',
+          user.profilePicture
+        )
+        fs.unlink(oldPath, (err) => {
+          // ENOENT just means the old file was already gone — not worth logging.
+          if (err && err.code !== 'ENOENT') {
+            console.error('Failed to delete old profile picture:', err)
+          }
+        })
+      }
 
-    //   user.profilePicture = profilePicture
-    // }
+      user.profilePicture = profilePicture
+    }
 
     user.username = username || user.username
     user.email = email || user.email
