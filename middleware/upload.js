@@ -1,28 +1,19 @@
 const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
+const { CloudinaryStorage } = require('multer-storage-cloudinary')
+const cloudinary = require('../config/cloudinary')
 
-// This mirrors the path already referenced in the commented-out block in
-// AuthCtrl.js's EditProfile — adjust if your folder structure differs.
-// __dirname here is .../server/src/middleware (or wherever this file lives),
-// so this resolves to .../meth_league-client/public/uploads.
-const UPLOAD_DIR = path.join(__dirname, '../../meth_league-client/public/uploads')
-
-// Make sure the folder exists so multer doesn't fail on a fresh clone/deploy.
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true })
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, UPLOAD_DIR)
-  },
-  filename: (req, file, cb) => {
-    // e.g. sbahlool-1723999999999.png — unique per upload, keeps the
-    // original extension, and is easy to trace back to the user in logs.
-    const ext = path.extname(file.originalname).toLowerCase()
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
     const safeUsername = (req.params.username || 'user').replace(/[^a-z0-9_-]/gi, '')
-    cb(null, `${safeUsername}-${Date.now()}${ext}`)
+    return {
+      folder: 'meth-league/profile-pictures',
+      public_id: `${safeUsername}-${Date.now()}`,
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+      // Square-crop centered on the face where detectable, so avatars
+      // come back consistent regardless of what the user uploaded.
+      transformation: [{ width: 400, height: 400, crop: 'fill', gravity: 'face' }],
+    }
   },
 })
 

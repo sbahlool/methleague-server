@@ -1,7 +1,6 @@
 const { User, Team, Prediction } = require('../models')
 const middleware = require('../middleware')
-const path = require('path')
-const fs = require('fs')
+const cloudinary = require('../config/cloudinary')
 
 const Register = async (req, res) => {
   try {
@@ -125,24 +124,22 @@ const EditProfile = async (req, res) => {
       return res.status(404).json({ error: 'User not found' })
     }
 
-    if (req.file && req.file.filename) {
-      const profilePicture = req.file.filename
+    if (req.file) {
+      // multer-storage-cloudinary gives us the secure URL as `file.path`
+      // and the Cloudinary public_id as `file.filename`.
+      const newPicture = req.file.path
+      const newPublicId = req.file.filename
 
-      if (user.profilePicture && user.profilePicture !== 'default.png') {
-        const oldPath = path.join(
-          __dirname,
-          '../../meth_league-client/public/uploads',
-          user.profilePicture
-        )
-        fs.unlink(oldPath, (err) => {
-          // ENOENT just means the old file was already gone — not worth logging.
-          if (err && err.code !== 'ENOENT') {
-            console.error('Failed to delete old profile picture:', err)
-          }
+      if (user.profilePicturePublicId) {
+        // Fire-and-forget: don't block the response on cleanup of the old
+        // image, and don't fail the whole request if Cloudinary hiccups.
+        cloudinary.uploader.destroy(user.profilePicturePublicId).catch((err) => {
+          console.error('Failed to delete old profile picture from Cloudinary:', err)
         })
       }
 
-      user.profilePicture = profilePicture
+      user.profilePicture = newPicture
+      user.profilePicturePublicId = newPublicId
     }
 
     user.username = username || user.username

@@ -9,6 +9,7 @@ const userSchema = new Schema(
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     profilePicture: { type: String },
+    profilePicturePublicId: { type: String },
     team: { type: Schema.Types.ObjectId, ref: 'Team' },
     MatchHighScore: { type: Number, default: 0 },
     role: {
