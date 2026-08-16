@@ -75,10 +75,23 @@ const Login = async (req, res) => {
 
 const ChangePassword = async (req, res) => {
   try {
+    // Only the account owner can change their own password — the token
+    // is already required (stripToken/verifyToken), this additionally
+    // checks the identity in that token actually matches the :username
+    // in the URL, not just that *someone* is logged in.
+    if (res.locals.payload?.username !== req.params.username) {
+      return res.status(403).send({ status: 'Error', msg: 'You can only change your own password.' })
+    }
+
     // Extract old and new passwords from body
     const { oldPassword, newPassword } = req.body
     // Find User by username (params)
     let user = await User.findOne({ username: req.params.username })
+
+    if (!user) {
+      return res.status(404).send({ status: 'Error', msg: 'User not found!' })
+    }
+
     // Compate entered existing password with actual password in DB
     let matched = await middleware.comparePassword(
       user.passwordDigest,
