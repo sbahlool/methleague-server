@@ -3,11 +3,11 @@ const teamSchema = require('./Team')
 
 const userSchema = new Schema(
   {
-    username: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true, trim: true },
+    email: { type: String, required: true, unique: true, trim: true },
     passwordDigest: { type: String, required: true },
-    firstname: { type: String, required: true },
-    lastname: { type: String, required: true },
+    firstname: { type: String, required: true, trim: true },
+    lastname: { type: String, required: true, trim: true },
     profilePicture: { type: String },
     profilePicturePublicId: { type: String },
     team: { type: Schema.Types.ObjectId, ref: 'Team' },

@@ -5,11 +5,15 @@ const cloudinary = require('../config/cloudinary')
 const Register = async (req, res) => {
   try {
     const { username, email, password, firstname, lastname, team } = req.body
+    const trimmedUsername = username?.trim()
+    const trimmedEmail = email?.trim()
+    const trimmedFirstname = firstname?.trim()
+    const trimmedLastname = lastname?.trim()
     const profilePicture = 'default.png'
     let passwordDigest = await middleware.hashPassword(password)
 
-    let existingEmail = await User.findOne({ email })
-    let existingUsername = await User.findOne({ username })
+    let existingEmail = await User.findOne({ email: trimmedEmail })
+    let existingUsername = await User.findOne({ username: trimmedUsername })
 
     if (existingEmail) {
       return res
@@ -19,11 +23,11 @@ const Register = async (req, res) => {
       return res.status(400).send('Username is already taken!')
     } else {
       const userData = {
-        username,
-        email,
+        username: trimmedUsername,
+        email: trimmedEmail,
         passwordDigest,
-        firstname,
-        lastname,
+        firstname: trimmedFirstname,
+        lastname: trimmedLastname,
         profilePicture
       }
       // only include team if it's a non-empty value
@@ -142,15 +146,22 @@ const EditProfile = async (req, res) => {
       user.profilePicturePublicId = newPublicId
     }
 
-    user.username = username || user.username
-    user.email = email || user.email
-    user.firstname = firstname || user.firstname
-    user.lastname = lastname || user.lastname
+    user.username = username?.trim() || user.username
+    user.email = email?.trim() || user.email
+    user.firstname = firstname?.trim() || user.firstname
+    user.lastname = lastname?.trim() || user.lastname
     user.team = team || user.team
 
     await user.save()
 
-    res.status(200).json(user)
+    // Reissue the token: username/role are baked into it as claims, and
+    // those don't update just because the DB record did. Without this,
+    // the client's session (and anything reading the token, like
+    // "Welcome, X!") stays stale until the user logs out and back in.
+    const payload = { id: user.id, username: user.username, role: user.role }
+    const token = middleware.createToken(payload)
+
+    res.status(200).json({ user, token })
   } catch (error) {
     console.error('Error updating profile:', error)
     res.status(500).json({ error: 'Failed to update profile' })
